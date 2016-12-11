@@ -4,7 +4,8 @@
   "description": "Twitter refugee map",
   "main": "server.js",
   "dependencies": {
-    "express": "~4.9.7",
-    "node-tweet-stream": "*"
+    "express": "*",
+    "node-tweet-stream": "*",
+    "firebase-admin": "*"
   }
 }

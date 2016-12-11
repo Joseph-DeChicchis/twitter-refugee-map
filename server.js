@@ -20,33 +20,67 @@ app.listen(app.get('port'), function() {
 	console.log('running on port', app.get('port'));
 });
 
+var admin = require("firebase-admin");
+
+admin.initializeApp({
+  credential: admin.credential.cert("key/twitter-refugee--1481491799644-firebase-adminsdk-q1oe7-4ab9574ffd.json"),
+  databaseURL: "https://twitter-refugee-1481491799644.firebaseio.com"
+});
+
+var db = admin.database();
+
 t.on('tweet', function (tweet) {
-  console.log('tweet received', tweet)
+  console.log('tweet received', tweet['lang']);
+
+  if (tweet['coordinates'] != null) {
+    console.log('tweet received', tweet['coordinates']);
+
+    var ref = db.ref("tweets/" + tweet['id']);
+
+    ref.set(
+      {
+        id: ""+tweet['id'],
+        circleValue: 1000000,
+        lat: tweet['coordinates']['coordinates'][1],
+        long: tweet['coordinates']['coordinates'][0]
+      }
+    );
+  }
+  else {
+
+    if (tweet['lang'] == 'en') {
+      var ref = db.ref("tweets/" + tweet['id']);
+      ref.set(
+        {
+          id: ""+tweet['id'],
+          circleValue: 1000000,
+          lat: 49.25,
+          long: -123.1
+        }
+      );
+    }
+  }
+  /*
+  if (tweet['place'] != null) {
+    console.log('tweet received', JSON.stringify(tweet['place']['bounding_box']['coordinates']), tweet['place']['full_name']);
+  }*/
 })
 
 t.on('error', function (err) {
   console.log('Oh no')
 })
 
-t.track('refugee');
-t.track('');
+t.track('refugee');       //English
+t.track('flüchtling');    //German
+t.track('réfugié');       //French
+t.track('vluchteling');   //Dutch
 
+app.get("/", function(request, response, next) {
 
-/*
-// Initialize socket.io
-var io = require('socket.io').listen(server);
-
-// Set a stream listener for tweets matching tracking keywords
-
-console.log("BREAK 1");
-
-twit.stream('statuses/filter',{ track: 'javascript'}, function(stream){
-  console.log("BREAK 2");
-  streamHandler(stream,io);
+    response.sendFile(__dirname + '/public/index.html')
 });
 
-function streamHandler(stream,io) {
-
-  console.log("ININ");
-
-}*/
+app.get("/*", function(request, response, next) {
+    console.log("404 not found")
+    response.sendFile(__dirname + '/public/404.html')
+});

@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <meta charset="utf-8">
+    <title>Circles</title>
+    <style>
+      /* Always set the map height explicitly to define the size of the div
+       * element that contains the map. */
+      #map {
+        height: 100%;
+      }
+      /* Optional: Makes the sample page fill the window. */
+      html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="map"></div>
+
+    <script src="https://www.gstatic.com/firebasejs/3.6.3/firebase.js"></script>
+    <script>
+      // Initialize Firebase
+      var config = {
+        apiKey: "AIzaSyBG6fJIO6BkYTIRpuFXWjoFdtMvAsEiRE0",
+        authDomain: "twitter-refugee-1481491799644.firebaseapp.com",
+        databaseURL: "https://twitter-refugee-1481491799644.firebaseio.com",
+        storageBucket: "twitter-refugee--1481491799644.appspot.com",
+        messagingSenderId: "666179321927"
+      };
+      var defaultApp = firebase.initializeApp(config);
+
+      console.log(defaultApp.name);
+
+      var defaultDatabase = defaultApp.database();
+
+      // This example creates circles on the map, representing populations in North
+      // America.
+
+      // First, create an object containing LatLng and population for each city.
+      var tweetsmap = {};/*{
+        "001": {
+          center: {lat: 41.878, lng: -87.629},
+          circleValue: 2714856
+        },
+        "002": {
+          center: {lat: 40.714, lng: -74.005},
+          circleValue: 8405837
+        },
+        "003": {
+          center: {lat: 34.052, lng: -118.243},
+          circleValue: 3857799
+        },
+        "004": {
+          center: {lat: 49.25, lng: -123.1},
+          circleValue: 603502
+        }
+      };*/
+      /*
+      tweetsmap["005"] = {
+        center: {lat: 24.052, lng: -108.243},
+        circleValue: 9827799
+      };*/
+      //element.id = "005";
+
+      //tweetsmap.push(element);
+
+      function initMap() {
+        // Create the map.
+
+        var map = new google.maps.Map(document.getElementById('map'), {
+          zoom: 4,
+          center: {lat: 37.090, lng: -95.712},
+          mapTypeId: 'terrain'
+        });
+
+        console.log("called");
+
+        // Construct the circle for each value in citymap.
+        // Note: We scale the area of the circle based on the population.
+        for (var tweet in tweetsmap) {
+          console.log(tweetsmap[tweet]);
+          // Add the circle for this city to the map.
+          var cityCircle = new google.maps.Circle({
+            strokeColor: '#FF0000',
+            strokeOpacity: 0.8,
+            strokeWeight: 2,
+            fillColor: '#FF0000',
+            fillOpacity: 0.35,
+            map: map,
+            center: tweetsmap[tweet].center,
+            radius: Math.sqrt(tweetsmap[tweet].circleValue) * 100
+          });
+        }
+      }
+      /*
+      tweetsmap["006"] = {
+        center: {lat: 100.052, lng: -110.243},
+        circleValue: 10827799
+      };*/
+
+      var tweetsRef = defaultDatabase.ref('tweets/');
+      tweetsRef.on('value', function(snapshot) {
+          //updateStarCount(postElement, snapshot.val());
+
+          console.log(snapshot.val());
+
+          for (var data in snapshot.val()) {
+
+            console.log(snapshot.val()[data]);
+            tweetsmap[snapshot.val()[data]["id"]] = {
+              center: {lat: snapshot.val()[data]["lat"], lng: snapshot.val()[data]["long"]},
+              circleValue: snapshot.val()[data]["circleValue"]
+            };
+          }
+
+          console.log("tweets");
+          console.log(tweetsmap);
+
+          /*
+          console.log(snapshot.val());
+          console.log(tweetsmap);
+          console.log(snapshot.val()["id"]);
+          console.log(snapshot.val()["lat"]);
+          console.log(snapshot.val()["lang"]);
+          tweetsmap[snapshot.val()["id"]] = {
+            center: {lat: snapshot.val()["lat"], lng: snapshot.val()["lang"]},
+            circleValue: snapshot.val()["circleValue"]
+          };*/
+
+
+          console.log(tweetsmap);
+
+          initMap();
+      });
+
+    </script>
+    <script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBs9RNtnZS1XQqyS_FgXgCFBhmW8sQBOs4">
+    </script>
+  </body>
+</html>
