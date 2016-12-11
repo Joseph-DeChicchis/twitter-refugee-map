@@ -47,7 +47,7 @@ t.on('tweet', function (tweet) {
     );
   }
   else {
-
+    /*
     if (tweet['lang'] == 'en') {
       var ref = db.ref("tweets/" + tweet['id']);
       ref.set(
@@ -58,7 +58,7 @@ t.on('tweet', function (tweet) {
           long: -123.1
         }
       );
-    }
+    }*/
   }
   /*
   if (tweet['place'] != null) {
