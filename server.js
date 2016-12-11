@@ -47,24 +47,27 @@ t.on('tweet', function (tweet) {
     );
   }
   else {
-    /*
     if (tweet['lang'] == 'en') {
       var ref = db.ref("tweets/" + tweet['id']);
       ref.set(
         {
           id: ""+tweet['id'],
           circleValue: 1000000,
-          lat: 49.25,
-          long: -123.1
+          lat: generateRandomNumber(49.25, 32.25),
+          long: -1 * generateRandomNumber(123.1, 80)
         }
       );
-    }*/
+    }
   }
   /*
   if (tweet['place'] != null) {
     console.log('tweet received', JSON.stringify(tweet['place']['bounding_box']['coordinates']), tweet['place']['full_name']);
   }*/
 })
+
+function generateRandomNumber(max, min) {
+    return highlightedNumber = Math.random() * (max - min) + min;
+};
 
 t.on('error', function (err) {
   console.log('Oh no')
