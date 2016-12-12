@@ -73,10 +73,12 @@ t.on('error', function (err) {
   console.log('Oh no')
 })
 
-t.track('refugee');       //English
-t.track('flüchtling');    //German
-t.track('réfugié');       //French
-t.track('vluchteling');   //Dutch
+// Uncomment these lines to track words
+
+//t.track('refugee');       //English
+//t.track('flüchtling');    //German
+//t.track('réfugié');       //French
+//t.track('vluchteling');   //Dutch
 
 app.get("/", function(request, response, next) {
 
